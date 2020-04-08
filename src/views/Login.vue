@@ -20,7 +20,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer />
-                            <v-btn color="primary" v-on:click="login" v-bind:loading="loginLoading" depressed="true" class="px-5">
+                            <v-btn color="primary" v-on:click="login" v-bind:loading="loginLoading" v-bind:depressed="true" class="px-5">
                                 Login
                             </v-btn>
                         </v-card-actions>
@@ -36,6 +36,8 @@ import Component from "vue-class-component";
 import Vue from "vue";
 import UPClient from "@/services/UPClient";
 import router, { HomeRoute } from "@/router";
+import State from "@/state";
+import User from "@/models/User";
 
 @Component({
 
@@ -47,16 +49,22 @@ export default class Login extends Vue {
     loginLoading: boolean = false;
 
     login() {
-        this.loginLoading = true;
-        UPClient.authenticateUser(this.username, this.password, (token: string) => {
-            this.loginLoading = false;
-            this.errorMessage = null;
-            router.push(HomeRoute.path);
-        }, (message: string) => {
+        let errorHandler = (message: string) => {
             this.loginLoading = false;
             this.errorMessage = message;
             this.password = "";
-        });
+        }
+
+        this.loginLoading = true;
+        UPClient.authenticateUser(this.username, this.password, (token: string, id: string) => {
+            State.dispatch("setToken", token);
+            UPClient.getUser(id, (user: User) => {
+                this.loginLoading = false;
+                this.errorMessage = null;
+                State.dispatch("login", user);
+                router.push(HomeRoute.path);
+            }, errorHandler);
+        }, errorHandler);
     }
 }
 </script>
