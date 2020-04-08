@@ -50,7 +50,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import { RouteConfig } from "vue-router";
-import { AboutRoute, LoginRoute } from "@/router";
+import { AboutRoute, UsersRoute, LoginRoute } from "@/router";
 import State from "@/state";
 import User from "@/models/User";
 
@@ -59,6 +59,7 @@ import User from "@/models/User";
 })
 export default class App extends Vue {
     menuPages: RouteConfig[] = [
+        UsersRoute,
         AboutRoute
     ];
 
