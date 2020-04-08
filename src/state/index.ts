@@ -16,6 +16,9 @@ export default new Vuex.Store({
         loggedIn(state, user: User) {
             state.user = user;
         },
+        loggedOut(state) {
+            state.user = null;
+        },
         gotToken(state, token: string) {
             state.token = token;
         }
@@ -26,6 +29,10 @@ export default new Vuex.Store({
         },
         setToken(context, token: string) {
             context.commit("gotToken", token);
+        },
+        logout(context) {
+            context.commit("gotToken", "");
+            context.commit("loggedOut");
         }
     }
 });
