@@ -20,4 +20,4 @@ export default class UPClient {
             onSuccess(data.token);
         }, onFailure);
     }
-}
+};

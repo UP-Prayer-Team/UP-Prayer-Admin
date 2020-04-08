@@ -6,13 +6,19 @@ import Login from '../views/Login.vue'
 Vue.use(VueRouter);
 
 export const LoginRoute: RouteConfig = {
-  path: '/',
+    path: '/',
     name: 'Login',
     component: Login
 };
 
+export const HomeRoute: RouteConfig = {
+    path: '/home',
+    name: 'Home',
+    component: Home
+}
+
 export const AboutRoute: RouteConfig = {
-  path: '/about',
+    path: '/about',
     name: 'About',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -21,12 +27,13 @@ export const AboutRoute: RouteConfig = {
 };
 
 const routes: RouteConfig[] = [
-  LoginRoute,
-  AboutRoute
+    LoginRoute,
+    HomeRoute,
+    AboutRoute
 ];
 
 const router = new VueRouter({
-  routes
+    routes
 });
 
 export default router;

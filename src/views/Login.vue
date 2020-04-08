@@ -20,7 +20,7 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer />
-                            <v-btn color="primary" v-on:click="login" depressed="true" class="px-5">
+                            <v-btn color="primary" v-on:click="login" v-bind:loading="loginLoading" depressed="true" class="px-5">
                                 Login
                             </v-btn>
                         </v-card-actions>
@@ -32,10 +32,10 @@
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component';
-import Vue from 'vue';
-import UPClient from '../services/UPClient';
-import router, { AboutRoute } from '../router';
+import Component from "vue-class-component";
+import Vue from "vue";
+import UPClient from "@/services/UPClient";
+import router, { HomeRoute } from "@/router";
 
 @Component({
 
@@ -44,12 +44,16 @@ export default class Login extends Vue {
     errorMessage: string | null = null;
     username: string = "";
     password: string = "";
+    loginLoading: boolean = false;
 
     login() {
+        this.loginLoading = true;
         UPClient.authenticateUser(this.username, this.password, (token: string) => {
+            this.loginLoading = false;
             this.errorMessage = null;
-            router.push(AboutRoute.path);
+            router.push(HomeRoute.path);
         }, (message: string) => {
+            this.loginLoading = false;
             this.errorMessage = message;
             this.password = "";
         });
