@@ -5,6 +5,8 @@
                 <v-card elevation="10" class="p-10">
                     <v-card-title>
                         UP Prayer Movement Administration
+                        <v-spacer></v-spacer>
+                        <img src="/img/logo.svg" style="max-height: 2em;">
                     </v-card-title>
                     <v-card-text>
 
