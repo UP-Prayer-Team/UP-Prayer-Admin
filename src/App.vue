@@ -6,9 +6,9 @@
                     <v-list-item-avatar style="background: rgb(50, 50, 50);">
                         {{ initials }}
                     </v-list-item-avatar>
-                    <v-list-item-content>
+                    <v-list-item-content v-if="user">
                         <v-list-item-title class="pl-1">
-                            {{ user == null ? "" : user.displayName }}
+                            {{ user.displayName }}
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <v-chip v-for="role in user.roles" v-bind:key="role" x-small color="white" class="primary--text mr-1">
@@ -55,7 +55,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import { RouteConfig } from "vue-router";
-import { AboutRoute, UsersRoute, LoginRoute } from "@/router";
+import { AboutRoute, UsersRoute, EndorsementsRoute, LoginRoute, } from "@/router";
 import State from "@/state";
 import UserModel from "@/models/UserModel";
 
@@ -65,6 +65,7 @@ import UserModel from "@/models/UserModel";
 export default class App extends Vue {
     menuPages: RouteConfig[] = [
         UsersRoute,
+        EndorsementsRoute,
         AboutRoute
     ];
 

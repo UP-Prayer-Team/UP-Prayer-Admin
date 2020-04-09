@@ -4,6 +4,7 @@ import Home from "@/views/Home.vue";
 import Login from "@/views/Login.vue";
 import Users from "@/views/Users.vue";
 import User from "@/views/User.vue";
+import Endorsements from "@/views/Endorsements.vue";
 
 Vue.use(VueRouter);
 
@@ -31,6 +32,12 @@ export const UsersRoute: RouteConfig = {
     component: Users
 };
 
+export const EndorsementsRoute: RouteConfig = {
+    path: "/endorsements",
+    name: "Charity Endorsements",
+    component: Endorsements
+}
+
 export const AboutRoute: RouteConfig = {
     path: "/about",
     name: "About",
@@ -45,6 +52,7 @@ const routes: RouteConfig[] = [
     HomeRoute,
     UserRoute,
     UsersRoute,
+    EndorsementsRoute,
     AboutRoute
 ];
 

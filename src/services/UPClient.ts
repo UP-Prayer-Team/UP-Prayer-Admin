@@ -1,5 +1,6 @@
 import User from "@/models/UserModel";
 import State from "@/state";
+import EndorsementModel from "@/models/EndorsementModel";
 
 function submitRequest(method: string, endpoint: string, body: object | null, onSuccess: (data: any) => void, onFailure: (message: string) => void) {
     let headers: any = { "Content-Type": "application/json" };
@@ -43,8 +44,28 @@ export default class UPClient {
         }, onFailure);
     }
 
+    // TODO: Password change
+    // TOOD: Password reset
+
     static deleteUser(id: string, onSuccess: () => void, onFailure: (message: string) => void) {
         submitRequest("POST", "/api/users/delete", { id }, (data: any) => {
+            onSuccess();
+        }, onFailure);
+    }
+
+    // TODO: Reservations
+
+    static listEndorsements(onSuccess: (currentIndex: number, endorsements: EndorsementModel[]) => void, onFailure: (message: string) => void) {
+        submitRequest("GET", "/api/endorsements/list", null, (data: any) => {
+            onSuccess(data.currentIndex, data.endorsements);
+        }, onFailure);
+    }
+
+    // TODO: Current endorsement
+    // TODO: Update endorsements
+
+    static updateEndorsements(currentIndex: number, endorsements: EndorsementModel[], onSuccess: () => void, onFailure: (message: string) => void) {
+        submitRequest("POST", "/api/endorsements/update", { currentIndex, endorsements }, (data: any) => {
             onSuccess();
         }, onFailure);
     }

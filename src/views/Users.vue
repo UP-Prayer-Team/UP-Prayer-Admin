@@ -13,8 +13,6 @@
             <v-spacer></v-spacer>
 
             <v-text-field v-model="filterText" prepend-inner-icon="mdi-filter" label="Filter" outlined rounded solo single-line hide-details filled clearable dense flat></v-text-field>
-
-
         </v-toolbar>
 
         <v-alert type="error" v-if="errorMessage" tile>
@@ -29,7 +27,7 @@
             </template>
             <template v-slot:item.edit="{ item }">
                 <v-btn icon @click="editUserClicked(item)">
-                    <v-icon small>
+                    <v-icon>
                         mdi-pencil
                     </v-icon>
                 </v-btn>
@@ -101,10 +99,10 @@ export default class Users extends Vue {
     filterText: string = "";
     headers = [
         {
-            text: "ID",
+            text: "Display Name",
             align: "start",
             sortable: true,
-            value: "id"
+            value: "displayName"
         },
         {
             text: "Username",
@@ -113,10 +111,10 @@ export default class Users extends Vue {
             value: "username"
         },
         {
-            text: "Display Name",
+            text: "ID",
             align: "start",
             sortable: true,
-            value: "displayName"
+            value: "id"
         },
         {
             text: "Email",
