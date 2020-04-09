@@ -7,11 +7,13 @@
                         {{ initials }}
                     </v-list-item-avatar>
                     <v-list-item-content>
-                        <v-list-item-title>
+                        <v-list-item-title class="pl-1">
                             {{ user == null ? "" : user.displayName }}
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                            {{ user == null ? "" : user.username }}
+                            <v-chip v-for="role in user.roles" v-bind:key="role" x-small color="white" class="primary--text mr-1">
+                                {{ role }}
+                            </v-chip>
                         </v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
@@ -25,7 +27,7 @@
                 <v-divider></v-divider>
                 <router-link v-for="page in menuPages" v-bind:key="page.name" v-bind:to="page.path" v-slot="{ href, route, navigate, isActive }">
                     <a v-bind:href="href" @click="navigate">
-                        <v-list-item link v-bind:class="{ 'v-list-item--active': isActive }"> <!--  v-on:click="menuClick(page)" v-bind:value="$route.name == page.name" -->
+                        <v-list-item link v-bind:class="{ 'v-list-item--active': isActive }">
                             <v-list-item-content>
                                 <v-list-item-title>
                                     {{ page.name }}
@@ -55,7 +57,7 @@ import Vue from "vue";
 import { RouteConfig } from "vue-router";
 import { AboutRoute, UsersRoute, LoginRoute } from "@/router";
 import State from "@/state";
-import User from "@/models/User";
+import UserModel from "@/models/UserModel";
 
 @Component({
 
@@ -70,7 +72,7 @@ export default class App extends Vue {
         return State.state.token == "";
     }
 
-    get user(): User | null {
+    get user(): UserModel | null {
         return State.state.user;
     }
 

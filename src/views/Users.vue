@@ -1,12 +1,13 @@
 <template>
-    <!--<v-card tile elevation="0" class="pt-2">-->
     <div class="pt-2">
         <v-toolbar dense flat>
-            <v-toolbar-title class="mr-2">Users</v-toolbar-title>
+            <v-toolbar-title class="mr-2">
+                Users
+            </v-toolbar-title>
             <v-btn icon @click="refreshData" v-bind:disabled="isLoading">
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
-            <v-btn icon @click="createUserClicked" v-bind:disabled="isLoading">
+            <v-btn icon @click.stop="createUserClicked" v-bind:disabled="isLoading">
                 <v-icon>mdi-account-plus</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
@@ -20,7 +21,20 @@
             {{ errorMessage }}
         </v-alert>
 
-        <v-data-table v-bind:headers="headers" v-bind:items="users" v-bind:search="filterText" v-bind:loading="isLoading"></v-data-table>
+        <v-data-table v-bind:headers="headers" v-bind:items="users" v-bind:search="filterText" v-bind:loading="isLoading">
+            <template v-slot:item.roles="{ item }">
+                <v-chip v-for="role in item.roles" v-bind:key="role" small color="primary" class="mr-1">
+                    {{ role }}
+                </v-chip>
+            </template>
+            <template v-slot:item.edit="{ item }">
+                <v-btn icon @click="editUserClicked(item)">
+                    <v-icon small>
+                        mdi-pencil
+                    </v-icon>
+                </v-btn>
+            </template>
+        </v-data-table>
 
         <v-dialog v-model="showCreateUser" persistent max-width="700px">
             <v-card elevation="0">
@@ -72,14 +86,13 @@
             </v-card>
         </v-dialog>
     </div>
-    <!--</v-card>-->
 </template>
 
 <script lang="ts">
 import Component from "vue-class-component";
 import Vue from "vue";
 import UPClient from "@/services/UPClient";
-import User from "@/models/User";
+import UserModel from "@/models/UserModel";
 
 @Component({
 
@@ -116,9 +129,15 @@ export default class Users extends Vue {
             align: "start",
             sortable: false,
             value: "roles"
+        },
+        {
+            text: "Edit",
+            align: "center",
+            sortable: false,
+            value: "edit"
         }
     ];
-    users: User[] = [];
+    users: UserModel[] = [];
     errorMessage: string | null = null;
     isLoading: boolean = false;
 
@@ -148,7 +167,7 @@ export default class Users extends Vue {
 
     refreshData() {
         this.isLoading = true;
-        UPClient.listUsers((users: User[]) => {
+        UPClient.listUsers((users: UserModel[]) => {
             this.users = users;
             this.errorMessage = null;
             this.isLoading = false;
@@ -179,6 +198,10 @@ export default class Users extends Vue {
             this.createUserLoading = false;
             this.createUserErrorMessage = message;
         });
+    }
+
+    editUserClicked(user: UserModel) {
+        this.$router.push("/user/" + user.id);
     }
 };
 </script>

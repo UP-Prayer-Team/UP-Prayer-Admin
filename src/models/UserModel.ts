@@ -1,5 +1,5 @@
 
-export default class User {
+export default class UserModel {
     id: string | null = "";
     username: string = "";
     displayName: string = "";

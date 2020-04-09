@@ -1,4 +1,4 @@
-import User from "@/models/User";
+import User from "@/models/UserModel";
 import State from "@/state";
 
 function submitRequest(method: string, endpoint: string, body: object | null, onSuccess: (data: any) => void, onFailure: (message: string) => void) {
@@ -39,6 +39,12 @@ export default class UPClient {
 
     static createUser(username: string, password: string, displayName: string, email: string, roles: string[], onSuccess: () => void, onFailure: (message: string) => void) {
         submitRequest("POST", "/api/users/create", { username, password, displayName, email, roles }, (data: any) => {
+            onSuccess();
+        }, onFailure);
+    }
+
+    static deleteUser(id: string, onSuccess: () => void, onFailure: (message: string) => void) {
+        submitRequest("POST", "/api/users/delete", { id }, (data: any) => {
             onSuccess();
         }, onFailure);
     }

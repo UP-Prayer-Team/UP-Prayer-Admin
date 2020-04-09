@@ -37,7 +37,7 @@ import Vue from "vue";
 import UPClient from "@/services/UPClient";
 import router, { HomeRoute } from "@/router";
 import State from "@/state";
-import User from "@/models/User";
+import UserModel from "@/models/UserModel";
 
 @Component({
 
@@ -58,7 +58,7 @@ export default class Login extends Vue {
         this.loginLoading = true;
         UPClient.authenticateUser(this.username, this.password, (token: string, id: string) => {
             State.dispatch("setToken", token);
-            UPClient.getUser(id, (user: User) => {
+            UPClient.getUser(id, (user: UserModel) => {
                 this.loginLoading = false;
                 this.errorMessage = null;
                 State.dispatch("login", user);

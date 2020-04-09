@@ -1,11 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import User from "@/models/User";
+import UserModel from "@/models/UserModel";
 
 Vue.use(Vuex);
 
-let defaultState: { token: string, user: User | null } = {
+let defaultState: { token: string, user: UserModel | null } = {
     token: "",
     user: null
 };
@@ -13,7 +13,7 @@ let defaultState: { token: string, user: User | null } = {
 export default new Vuex.Store({
     state: defaultState,
     mutations: {
-        loggedIn(state, user: User) {
+        loggedIn(state, user: UserModel) {
             state.user = user;
         },
         loggedOut(state) {
@@ -24,7 +24,7 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        login(context, user: User ) {
+        login(context, user: UserModel ) {
             context.commit("loggedIn", user);
         },
         setToken(context, token: string) {
