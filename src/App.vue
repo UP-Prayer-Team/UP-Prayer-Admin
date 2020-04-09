@@ -37,6 +37,9 @@
                 </router-link>
 
             </v-list>
+            <v-spacer></v-spacer>
+            <img src="/img/logo-white.svg" style="max-width: 40%; align-self: center;" class="mb-5">
+
         </v-navigation-drawer>
 
         <v-content class="no-transition">
@@ -113,5 +116,10 @@ export default class App extends Vue {
 .v-application .v-list a {
     color: inherit;
     text-decoration: none;
+}
+
+.v-navigation-drawer__content {
+    display: flex;
+    flex-direction: column;
 }
 </style>

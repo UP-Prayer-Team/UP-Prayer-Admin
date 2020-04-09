@@ -1,17 +1,17 @@
 <template>
-    <v-card tile elevation="0">
-
-        <v-toolbar dense flat class="mt-2">
+    <!--<v-card tile elevation="0" class="pt-2">-->
+    <div class="pt-2">
+        <v-toolbar dense flat>
             <v-toolbar-title class="mr-2">Users</v-toolbar-title>
             <v-btn icon @click="refreshData" v-bind:disabled="isLoading">
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
-            <v-btn icon v-bind:disabled="isLoading">
+            <v-btn icon @click="createUserClicked" v-bind:disabled="isLoading">
                 <v-icon>mdi-account-plus</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
 
-            <v-text-field v-model="search" prepend-inner-icon="mdi-magnify" label="Search" outlined rounded solo single-line hide-details filled clearable dense flat></v-text-field>
+            <v-text-field v-model="filterText" prepend-inner-icon="mdi-filter" label="Filter" outlined rounded solo single-line hide-details filled clearable dense flat></v-text-field>
 
 
         </v-toolbar>
@@ -20,8 +20,59 @@
             {{ errorMessage }}
         </v-alert>
 
-        <v-data-table v-bind:headers="headers" v-bind:items="users" v-bind:search="search" v-bind:loading="isLoading"></v-data-table>
-    </v-card>
+        <v-data-table v-bind:headers="headers" v-bind:items="users" v-bind:search="filterText" v-bind:loading="isLoading"></v-data-table>
+
+        <v-dialog v-model="showCreateUser" persistent max-width="700px">
+            <v-card elevation="0">
+                <v-card-title>
+                    Create New User
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="createUserCancel">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-alert type="error" v-if="createUserErrorMessage" tile>
+                    {{ createUserErrorMessage }}
+                </v-alert>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col>
+                                <v-text-field v-model="createUserData.username" label="Username" hide-details></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <v-text-field v-model="createUserData.password" label="Password" type="password" hide-details></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <v-text-field v-model="createUserData.displayName" label="Dislay Name" hide-details></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <v-text-field v-model="createUserData.email" label="Email Address" hide-details></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <v-select v-model="createUserData.type" v-bind:items="userTypeOptions" label="Privileges"></v-select>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="createUserSubmit" color="primary" depressed v-bind:loading="createUserLoading">
+                        Create User
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </div>
+    <!--</v-card>-->
 </template>
 
 <script lang="ts">
@@ -34,7 +85,7 @@ import User from "@/models/User";
 
 })
 export default class Users extends Vue {
-    search: string = "";
+    filterText: string = "";
     headers = [
         {
             text: "ID",
@@ -71,6 +122,26 @@ export default class Users extends Vue {
     errorMessage: string | null = null;
     isLoading: boolean = false;
 
+    showCreateUser: boolean = false;
+    userTypeOptions = [
+        "Spectator (Read-only)",
+        "Administrator (Complete power)"
+    ];
+    userTypeRoles = [
+        [ "spectator" ],
+        [ "spectator", "admin" ]
+    ];
+    blankUserData = {
+        username: "",
+        password: "",
+        displayName: "",
+        email: "",
+        type: this.userTypeOptions[0]
+    };
+    createUserData = Object.assign({}, this.blankUserData);
+    createUserLoading: boolean = false;
+    createUserErrorMessage: string | null = null;
+
     mounted() {
         this.refreshData();
     }
@@ -84,6 +155,29 @@ export default class Users extends Vue {
         }, (message: string) => {
             this.errorMessage = message;
             this.isLoading = false;
+        });
+    }
+
+    createUserClicked() {
+        this.createUserData = Object.assign({}, this.blankUserData);
+        this.showCreateUser = true;
+    }
+
+    createUserCancel() {
+        this.showCreateUser = false;
+    }
+
+    createUserSubmit() {
+        this.createUserLoading = true;
+        this.createUserErrorMessage = null;
+        let roles = this.userTypeRoles[this.userTypeOptions.indexOf(this.createUserData.type)];
+        UPClient.createUser(this.createUserData.username, this.createUserData.password, this.createUserData.displayName, this.createUserData.email, roles, () => {
+            this.createUserLoading = false;
+            this.showCreateUser = false;
+            this.refreshData();
+        }, (message: string) => {
+            this.createUserLoading = false;
+            this.createUserErrorMessage = message;
         });
     }
 };

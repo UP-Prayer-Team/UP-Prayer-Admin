@@ -36,4 +36,10 @@ export default class UPClient {
     static getUser(id: string, onSuccess: (user: User) => void, onFailure: (message: string) => void) {
         submitRequest("GET", "/api/users/user/" + id, null, onSuccess, onFailure);
     }
+
+    static createUser(username: string, password: string, displayName: string, email: string, roles: string[], onSuccess: () => void, onFailure: (message: string) => void) {
+        submitRequest("POST", "/api/users/create", { username, password, displayName, email, roles }, (data: any) => {
+            onSuccess();
+        }, onFailure);
+    }
 };
