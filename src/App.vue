@@ -55,7 +55,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import { RouteConfig } from "vue-router";
-import { AboutRoute, UsersRoute, EndorsementsRoute, LoginRoute, } from "@/router";
+import { HomeRoute, UsersRoute, EndorsementsRoute, LoginRoute, } from "@/router";
 import State from "@/state";
 import UserModel from "@/models/UserModel";
 
@@ -64,9 +64,9 @@ import UserModel from "@/models/UserModel";
 })
 export default class App extends Vue {
     menuPages: RouteConfig[] = [
+        HomeRoute,
         UsersRoute,
-        EndorsementsRoute,
-        AboutRoute
+        EndorsementsRoute
     ];
 
     get hideMenu(): boolean {

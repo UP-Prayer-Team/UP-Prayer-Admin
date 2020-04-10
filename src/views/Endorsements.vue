@@ -137,7 +137,7 @@ export default class Endorsements extends Vue {
     headers = [
         {
             text: "Currently Focused",
-            align: "center",
+            align: "start",
             sortable: false,
             value: "current"
         },
@@ -161,7 +161,7 @@ export default class Endorsements extends Vue {
         },
         {
             text: "Actions",
-            align: "center",
+            align: "end",
             sortable: false,
             value: "actions"
         }
