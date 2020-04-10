@@ -81,34 +81,36 @@
                 <v-alert type="error" v-if="editErrorMessage" tile>
                     {{ editErrorMessage }}
                 </v-alert>
-                <v-card-text>
-                    <v-container>
-                        <v-row>
-                            <v-col>
-                                <v-text-field v-model="editCopy.homepageURL" label="Homepage URL" hide-details></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col>
-                                <v-text-field v-model="editCopy.donateURL" label="Donation URL" hide-details></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col>
-                                <v-textarea v-model="editCopy.summary" label="Summary" hide-details></v-textarea>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn @click="editEndorsementCancel" depressed>
-                        Cancel
-                    </v-btn>
-                    <v-btn @click="editEndorsementSubmit" v-bind:loading="editPending" color="primary" depressed>
-                        {{ isEditCreating ? "Create" : "Save" }}
-                    </v-btn>
-                </v-card-actions>
+                <v-form @submit.prevent="editEndorsementSubmit">
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="editCopy.homepageURL" label="Homepage URL" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="editCopy.donateURL" label="Donation URL" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-textarea v-model="editCopy.summary" label="Summary" hide-details></v-textarea>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="editEndorsementCancel" depressed>
+                            Cancel
+                        </v-btn>
+                        <v-btn type="submit" v-bind:loading="editPending" color="primary" depressed>
+                            {{ isEditCreating ? "Create" : "Save" }}
+                        </v-btn>
+                    </v-card-actions>
+                </v-form>
             </v-card>
         </v-dialog>
     </div>

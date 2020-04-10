@@ -46,41 +46,43 @@
                 <v-alert type="error" v-if="createUserErrorMessage" tile>
                     {{ createUserErrorMessage }}
                 </v-alert>
-                <v-card-text>
-                    <v-container>
-                        <v-row>
-                            <v-col>
-                                <v-text-field v-model="createUserData.username" label="Username" hide-details></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col>
-                                <v-text-field v-model="createUserData.password" label="Password" type="password" hide-details></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col>
-                                <v-text-field v-model="createUserData.displayName" label="Dislay Name" hide-details></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col>
-                                <v-text-field v-model="createUserData.email" label="Email Address" hide-details></v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col>
-                                <v-select v-model="createUserData.type" v-bind:items="userTypeOptions" label="Privileges"></v-select>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn @click="createUserSubmit" color="primary" depressed v-bind:loading="createUserLoading || isReadOnly">
-                        Create User
-                    </v-btn>
-                </v-card-actions>
+                <v-form @submit.prevent="createUserSubmit">
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="createUserData.username" label="Username" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="createUserData.password" label="Password" type="password" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="createUserData.displayName" label="Dislay Name" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="createUserData.email" label="Email Address" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-select v-model="createUserData.type" v-bind:items="userTypeOptions" label="Privileges"></v-select>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn type="submit" color="primary" depressed v-bind:loading="createUserLoading || isReadOnly">
+                            Create User
+                        </v-btn>
+                    </v-card-actions>
+                </v-form>
             </v-card>
         </v-dialog>
     </div>

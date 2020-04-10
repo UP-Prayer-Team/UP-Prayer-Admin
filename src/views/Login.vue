@@ -8,23 +8,25 @@
                         <v-spacer></v-spacer>
                         <img src="/img/logo.svg" style="max-height: 2em;">
                     </v-card-title>
-                    <v-card-text>
 
-                        <v-alert type="error" v-if="errorMessage">
-                            {{ errorMessage }}
-                        </v-alert>
+                    <v-alert type="error" v-if="errorMessage" tile>
+                        {{ errorMessage }}
+                    </v-alert>
 
-                        <v-form>
+                    <v-form @submit.prevent="login">
+                        <v-card-text>
+
                             <v-text-field label="Username" name="username" type="text" v-model="username" />
                             <v-text-field label="Password" name="password" type="password" v-model="password" />
-                        </v-form>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer />
-                        <v-btn color="primary" v-on:click="login" v-bind:loading="loginLoading" v-bind:depressed="true" class="px-5">
-                            Login
-                        </v-btn>
-                    </v-card-actions>
+                        </v-card-text>
+
+                        <v-card-actions>
+                            <v-spacer />
+                            <v-btn color="primary" type="submit" v-bind:loading="loginLoading" v-bind:depressed="true" class="px-5">
+                                Login
+                            </v-btn>
+                        </v-card-actions>
+                    </v-form>
                 </v-card>
             </v-col>
         </v-row>
