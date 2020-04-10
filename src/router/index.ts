@@ -1,10 +1,12 @@
 import Vue from "vue";
-import VueRouter, { RouteConfig } from "vue-router";
+import VueRouter, { RouteConfig, Route } from "vue-router";
 import Home from "@/views/Home.vue";
 import Login from "@/views/Login.vue";
 import Users from "@/views/Users.vue";
 import User from "@/views/User.vue";
 import Endorsements from "@/views/Endorsements.vue";
+import Vuex from "vuex";
+import State from "@/state";
 
 Vue.use(VueRouter);
 
@@ -58,6 +60,15 @@ const routes: RouteConfig[] = [
 
 const router = new VueRouter({
     routes
+});
+
+router.beforeEach((to: Route, from: Route, next) => {
+    if (to.name != LoginRoute.name && (State.state.token == null || State.state.token == "" || State.state.user == null)) {
+        next(LoginRoute.path);
+    }
+    else {
+        next();
+    }
 });
 
 export default router;
