@@ -68,6 +68,49 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-dialog v-model="showEditDialog" persistent max-width="750">
+            <v-card>
+                <v-card-title>
+                    {{ isEditCreating ? "Create" : "Edit" }} Endorsement
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="editEndorsementCancel">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-card-title>
+                <v-alert type="error" v-if="editErrorMessage" tile>
+                    {{ editErrorMessage }}
+                </v-alert>
+                <v-card-text>
+                    <v-container>
+                        <v-row>
+                            <v-col>
+                                <v-text-field v-model="editCopy.homepageURL" label="Homepage URL" hide-details></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <v-text-field v-model="editCopy.donateURL" label="Donation URL" hide-details></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <v-textarea v-model="editCopy.summary" label="Summary" hide-details></v-textarea>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="editEndorsementCancel" depressed>
+                        Cancel
+                    </v-btn>
+                    <v-btn @click="editEndorsementSubmit" v-bind:loading="editPending" color="primary" depressed>
+                        {{ isEditCreating ? "Create" : "Save" }}
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -119,10 +162,19 @@ export default class Endorsements extends Vue {
     endorsements: EndorsementModel[] = [];
     currentEndorsementIndex: number = 0;
 
-    deleteTarget: EndorsementModel | null = null;
+    // Delete confirmation dialog
     showDeleteConfirmation: boolean = false;
+    deleteTarget: EndorsementModel | null = null;
     deletePending: boolean = false;
     deleteErrorMessage: string | null = null;
+
+    // Endorsement editing dialog
+    showEditDialog: boolean = false;
+    editTarget: EndorsementModel = new EndorsementModel(); // The endorsement to modify upon confirmation
+    editCopy: EndorsementModel = new EndorsementModel(); // The endorsement the form modifies live
+    editPending: boolean = false;
+    editErrorMessage: string | null = null;
+    isEditCreating: boolean = false;
 
     mounted() {
         this.refreshData();
@@ -159,11 +211,17 @@ export default class Endorsements extends Vue {
     }
 
     createEndorsementClicked() {
-
+        this.editTarget = new EndorsementModel();
+        this.editCopy = new EndorsementModel();
+        this.isEditCreating = true;
+        this.showEditDialog = true;
     }
 
     editEndorsementClicked(endorsement: EndorsementModel) {
-
+        this.editTarget = endorsement;
+        this.editCopy = Object.assign({}, endorsement);
+        this.isEditCreating = false;
+        this.showEditDialog = true;
     }
 
     deleteEndorsementClicked(endorsement: EndorsementModel) {
@@ -211,6 +269,33 @@ export default class Endorsements extends Vue {
             });
 
         }
+    }
+
+    editEndorsementSubmit() {
+        let newEndorsements: EndorsementModel[] = Array<EndorsementModel>(...this.endorsements);
+        if (this.isEditCreating) {
+            newEndorsements.push(this.editCopy);
+        }
+        else {
+            let index = this.endorsements.indexOf(this.editTarget);
+            newEndorsements[index] = this.editCopy;
+        }
+
+        this.editPending = true;
+        UPClient.updateEndorsements(this.currentEndorsementIndex, newEndorsements, () => {
+            this.endorsements = newEndorsements;
+
+            this.editErrorMessage = null;
+            this.editPending = false;
+            this.showEditDialog = false;
+        }, (message: string) => {
+            this.editErrorMessage = message;
+            this.editPending = false;
+        });
+    }
+
+    editEndorsementCancel() {
+        this.showEditDialog = false;
     }
 }
 </script>
