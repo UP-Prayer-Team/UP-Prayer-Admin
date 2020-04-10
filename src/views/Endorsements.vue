@@ -7,7 +7,7 @@
             <v-btn icon @click="refreshData" v-bind:disabled="isLoading">
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
-            <v-btn icon @click.stop="createEndorsementClicked" v-bind:disabled="isLoading">
+            <v-btn icon @click.stop="createEndorsementClicked" v-bind:disabled="isLoading || isReadOnly">
                 <v-icon>mdi-newspaper-plus</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
@@ -21,7 +21,7 @@
 
         <v-data-table v-bind:headers="headers" v-bind:items="endorsements" v-bind:search="filterText" v-bind:loading="isLoading">
             <template v-slot:item.current="{ item }">
-                <v-btn icon @click="setCurrentEndorsementClicked(item)" v-bind:disabled="isLoading" v-bind:color="endorsements.indexOf(item) == currentEndorsementIndex ? 'primary' : undefined">
+                <v-btn icon @click="setCurrentEndorsementClicked(item)" v-bind:disabled="isLoading || isReadOnly" v-bind:color="endorsements.indexOf(item) == currentEndorsementIndex ? 'primary' : undefined">
                     <v-icon>
                         {{ endorsements.indexOf(item) == currentEndorsementIndex ? "mdi-star" : "mdi-star-outline" }}
                     </v-icon>
@@ -29,12 +29,12 @@
             </template>
             <template v-slot:item.actions="{ item }">
                 <div style="display: flex;">
-                    <v-btn icon @click="editEndorsementClicked(item)" v-bind:disabled="isLoading">
+                    <v-btn icon @click="editEndorsementClicked(item)" v-bind:disabled="isLoading || isReadOnly">
                         <v-icon>
                             mdi-pencil
                         </v-icon>
                     </v-btn>
-                    <v-btn icon @click="deleteEndorsementClicked(item)" v-bind:disabled="isLoading">
+                    <v-btn icon @click="deleteEndorsementClicked(item)" v-bind:disabled="isLoading || isReadOnly">
                         <v-icon>
                             mdi-delete
                         </v-icon>
@@ -119,11 +119,16 @@ import Component from "vue-class-component";
 import Vue from "vue";
 import EndorsementModel from "@/models/EndorsementModel";
 import UPClient from "@/services/UPClient";
+import State from "@/state";
 
 @Component({
 
 })
 export default class Endorsements extends Vue {
+    get isReadOnly(): boolean {
+        return State.state.user == null || State.state.user.roles.indexOf("admin") == -1;
+    }
+
     isLoading: boolean = false;
     errorMessage: string | null = null;
     filterText: string = "";

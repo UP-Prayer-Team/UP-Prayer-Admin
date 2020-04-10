@@ -7,7 +7,7 @@
             <v-btn icon @click="refreshData" v-bind:disabled="isLoading">
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
-            <v-btn icon @click.stop="createUserClicked" v-bind:disabled="isLoading">
+            <v-btn icon @click.stop="createUserClicked" v-bind:disabled="isLoading || isReadOnly">
                 <v-icon>mdi-account-plus</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
@@ -26,7 +26,7 @@
                 </v-chip>
             </template>
             <template v-slot:item.edit="{ item }">
-                <v-btn icon @click="editUserClicked(item)">
+                <v-btn icon @click="editUserClicked(item)" v-bind:disabled="isReadOnly">
                     <v-icon>
                         mdi-pencil
                     </v-icon>
@@ -77,7 +77,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn @click="createUserSubmit" color="primary" depressed v-bind:loading="createUserLoading">
+                    <v-btn @click="createUserSubmit" color="primary" depressed v-bind:loading="createUserLoading || isReadOnly">
                         Create User
                     </v-btn>
                 </v-card-actions>
@@ -91,11 +91,16 @@ import Component from "vue-class-component";
 import Vue from "vue";
 import UPClient from "@/services/UPClient";
 import UserModel from "@/models/UserModel";
+import State from "@/state";
 
 @Component({
 
 })
 export default class Users extends Vue {
+    get isReadOnly(): boolean {
+        return State.state.user == null || State.state.user.roles.indexOf("admin") == -1;
+    }
+
     filterText: string = "";
     headers = [
         {
