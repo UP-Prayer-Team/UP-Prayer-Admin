@@ -86,6 +86,11 @@
                         <v-container>
                             <v-row>
                                 <v-col>
+                                    <v-text-field v-model="editCopy.name" label="Name" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
                                     <v-text-field v-model="editCopy.homepageURL" label="Homepage URL" hide-details></v-text-field>
                                 </v-col>
                             </v-row>
@@ -140,6 +145,12 @@ export default class Endorsements extends Vue {
             align: "start",
             sortable: false,
             value: "current"
+        },
+        {
+            text: "Name",
+            align: "start",
+            sortable: true,
+            value: "name"
         },
         {
             text: "Homepage URL",
