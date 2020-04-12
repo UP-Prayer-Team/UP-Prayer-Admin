@@ -51,22 +51,22 @@
                         <v-container>
                             <v-row>
                                 <v-col>
-                                    <v-text-field v-model="createUserData.username" label="Username" hide-details></v-text-field>
+                                    <v-text-field v-model="createUserData.username" label="Username" autocomplete="new-password" hide-details></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-text-field v-model="createUserData.password" label="Password" type="password" hide-details></v-text-field>
+                                    <v-text-field v-model="createUserData.password" label="Password" type="password" autocomplete="new-password" hide-details></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-text-field v-model="createUserData.displayName" label="Dislay Name" hide-details></v-text-field>
+                                    <v-text-field v-model="createUserData.displayName" label="Dislay Name" autocomplete="new-password" hide-details></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-text-field v-model="createUserData.email" label="Email Address" hide-details></v-text-field>
+                                    <v-text-field v-model="createUserData.email" label="Email Address" autocomplete="email" hide-details></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
