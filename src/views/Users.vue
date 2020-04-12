@@ -78,6 +78,9 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
+                        <v-btn @click="createUserCancel" depressed>
+                            Cancel
+                        </v-btn>
                         <v-btn type="submit" color="primary" depressed v-bind:loading="createUserLoading || isReadOnly">
                             Create User
                         </v-btn>
@@ -185,6 +188,7 @@ export default class Users extends Vue {
     createUserClicked() {
         this.createUserData = Object.assign({}, this.blankUserData);
         this.showCreateUser = true;
+        this.createUserErrorMessage = null;
     }
 
     createUserCancel() {

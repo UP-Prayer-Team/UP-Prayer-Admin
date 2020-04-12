@@ -17,7 +17,7 @@ function submitRequest(method: string, endpoint: string, body: object | null, on
             onFailure(json.message);
         }
     }).catch(error => {
-        onFailure(error);
+        onFailure("Couldn't connect to server.");
     });
 }
 

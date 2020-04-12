@@ -222,6 +222,7 @@ export default class Endorsements extends Vue {
         this.editCopy = new EndorsementModel();
         this.isEditCreating = true;
         this.showEditDialog = true;
+        this.editErrorMessage = null;
     }
 
     editEndorsementClicked(endorsement: EndorsementModel) {
@@ -229,6 +230,7 @@ export default class Endorsements extends Vue {
         this.editCopy = Object.assign({}, endorsement);
         this.isEditCreating = false;
         this.showEditDialog = true;
+        this.editErrorMessage = null;
     }
 
     deleteEndorsementClicked(endorsement: EndorsementModel) {
