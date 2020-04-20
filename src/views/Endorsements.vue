@@ -8,7 +8,7 @@
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
             <v-btn icon @click.stop="createEndorsementClicked" v-bind:disabled="isLoading || isReadOnly">
-                <v-icon>mdi-newspaper-plus</v-icon>
+                <v-icon>mdi-comment-plus-outline</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
 
