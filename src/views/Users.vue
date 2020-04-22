@@ -219,4 +219,10 @@ export default class Users extends Vue {
 .v-text-field.v-input--dense .v-input__prepend-inner .v-input__icon > .v-icon {
     margin-top: 1px;
 }
+.v-text-field.v-input--dense .v-input__append-inner .v-input__icon > .v-icon {
+    margin-top: 0px;
+}
+.v-text-field--rounded > .v-input__control > .v-input__slot {
+    padding: 0px 12px;
+}
 </style>
