@@ -19,7 +19,7 @@
             {{ errorMessage }}
         </v-alert>
 
-        <v-data-table v-bind:headers="headers" v-bind:items="posts" v-bind:search="filterText" v-bind:loading="isLoading">
+        <v-data-table v-bind:headers="headers" v-bind:items="posts" v-bind:search="filterText" v-bind:loading="isLoading" sort-by="date">
             <template v-slot:item.actions="{ item }">
                 <div style="display: flex; justify-content: flex-end;">
                     <v-btn icon @click="editPostClicked(item)" v-bind:disabled="isLoading || isReadOnly">
@@ -122,6 +122,10 @@ export default class BlogPosts extends Vue {
         return State.state.user == null || State.state.user.roles.indexOf("admin") == -1;
     }
 
+    dateSorter(a: string, b: string) {
+        return new Date(a).valueOf() - new Date(b).valueOf();
+    }
+
     isLoading: boolean = false;
     errorMessage: string | null = null;
     headers = [
@@ -135,7 +139,8 @@ export default class BlogPosts extends Vue {
             text: "Post Date",
             align: "start",
             sortable: true,
-            value: "date"
+            value: "date",
+            sort: this.dateSorter
         },
         {
             text: "ID",
