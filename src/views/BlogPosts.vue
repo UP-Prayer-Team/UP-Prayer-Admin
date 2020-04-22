@@ -21,13 +21,13 @@
 
         <v-data-table v-bind:headers="headers" v-bind:items="posts" v-bind:search="filterText" v-bind:loading="isLoading">
             <template v-slot:item.actions="{ item }">
-                <div style="display: flex;">
-                    <v-btn icon @click="editEndorsementClicked(item)" v-bind:disabled="isLoading || isReadOnly">
+                <div style="display: flex; justify-content: flex-end;">
+                    <v-btn icon @click="editPostClicked(item)" v-bind:disabled="isLoading || isReadOnly">
                         <v-icon>
                             mdi-pencil
                         </v-icon>
                     </v-btn>
-                    <v-btn icon @click="deleteEndorsementClicked(item)" v-bind:disabled="isLoading || isReadOnly">
+                    <v-btn icon @click="deletePostClicked(item)" v-bind:disabled="isLoading || isReadOnly">
                         <v-icon>
                             mdi-delete
                         </v-icon>
@@ -35,6 +35,29 @@
                 </div>
             </template>
         </v-data-table>
+
+        <v-dialog v-model="showDeleteConfirmation" persistent max-width="550">
+            <v-card>
+                <v-card-title v-if="deleteTarget">
+                    Delete &quot;{{ deleteTarget.title }}&quot;?
+                </v-card-title>
+                <v-alert type="warning" tile>
+                    This cannot be undone.
+                </v-alert>
+                <v-alert type="error" v-if="deleteErrorMessage" tile>
+                    {{ deleteErrorMessage }}
+                </v-alert>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn @click="showDeleteConfirmation = false" depressed v-bind:disabled="deletePending">
+                        Cancel
+                    </v-btn>
+                    <v-btn @click="deleteConfirmed" color="error" depressed v-bind:loading="deletePending">
+                        Delete Post
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -79,10 +102,22 @@ export default class BlogPosts extends Vue {
             align: "start",
             sortable: true,
             value: "author"
+        },
+        {
+            text: "Actions",
+            align: "end",
+            sortable: false,
+            value: "actions"
         }
     ];
     posts: BlogPostModel[] = [ ];
     filterText: string = "";
+
+    // Delete confirmation dialog
+    showDeleteConfirmation: boolean = false;
+    deleteTarget: BlogPostModel | null = null;
+    deletePending: boolean = false;
+    deleteErrorMessage: string | null = null;
 
     mounted() {
         this.refreshData();
@@ -97,7 +132,34 @@ export default class BlogPosts extends Vue {
     }
 
     createPostClicked() {
+        // TODO: Implement
+    }
 
+    editPostClicked(post: BlogPostModel) {
+        // TODO: Implement
+    }
+
+    deletePostClicked(post: BlogPostModel) {
+        this.deleteTarget = post;
+        this.deleteErrorMessage = null;
+        this.showDeleteConfirmation = true;
+    }
+
+    deleteConfirmed() {
+        if (this.deleteTarget != null) {
+            this.deletePending = true;
+            UPClient.deletePost(this.deleteTarget.id, () => {
+                this.deleteErrorMessage = null;
+                this.deletePending = false;
+                this.showDeleteConfirmation = false;
+                this.deleteTarget = null;
+
+                this.refreshData();
+            }, (message: string) => {
+                this.deleteErrorMessage = message;
+                this.deletePending = false;
+            });
+        }
     }
 }
 </script>

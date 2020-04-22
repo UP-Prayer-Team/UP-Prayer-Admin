@@ -28,7 +28,7 @@
                 </v-btn>
             </template>
             <template v-slot:item.actions="{ item }">
-                <div style="display: flex;">
+                <div style="display: flex; justify-content: flex-end;">
                     <v-btn icon @click="editEndorsementClicked(item)" v-bind:disabled="isLoading || isReadOnly">
                         <v-icon>
                             mdi-pencil

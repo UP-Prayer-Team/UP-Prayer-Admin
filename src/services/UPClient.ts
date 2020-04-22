@@ -78,4 +78,12 @@ export default class UPClient {
             onSuccess(data);
         }, onFailure);
     }
+
+    // static getPost(...)
+
+    static deletePost(id: string, onSuccess: () => void, onFailure: (message: string) => void) {
+        submitRequest("POST", "/api/posts/delete", { id }, (data: any) => {
+            onSuccess();
+        }, onFailure);
+    }
 };
