@@ -71,7 +71,11 @@ export default class UPClient {
         }, onFailure);
     }
 
-    //static createPost(title: string, date: string, content: string, )
+    static createPost(post: BlogPostModel, onSuccess: () => void, onFailure: (message: string) => void) {
+        submitRequest("POST", "/api/posts/create", { title: post.title, date: post.date, content: post.content }, (data: any) => {
+            onSuccess();
+        }, onFailure);
+    }
 
     static listPosts(onSuccess: (posts: BlogPostModel[]) => void, onFailure: (message: string) => void) {
         submitRequest("GET", "/api/posts/list", null, (data: any) => {
@@ -79,10 +83,20 @@ export default class UPClient {
         }, onFailure);
     }
 
-    // static getPost(...)
+    static getPost(id: string, onSuccess: (post: BlogPostModel) => void, onFailure: (message: string) => void) {
+        submitRequest("GET", "/api/posts/post/" + id, null, (data: any) => {
+            onSuccess(data);
+        }, onFailure);
+    }
 
     static deletePost(id: string, onSuccess: () => void, onFailure: (message: string) => void) {
         submitRequest("POST", "/api/posts/delete", { id }, (data: any) => {
+            onSuccess();
+        }, onFailure);
+    }
+
+    static updatePost(post: BlogPostModel, onSuccess: () => void, onFailure: (message: string) => void) {
+        submitRequest("POST", "/api/posts/update", { id: post.id, title: post.title, date: post.date, content: post.content }, (data: any) => {
             onSuccess();
         }, onFailure);
     }

@@ -58,6 +58,52 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-dialog v-model="showEditDialog" persistent max-width="850">
+            <v-card>
+                <v-card-title>
+                    {{ isEditCreating ? "Create Blog Post" : "Edit \"" + editCopy.title + "\"" }}
+                </v-card-title>
+                <v-alert type="error" v-if="editErrorMessage" tile>
+                    {{ editErrorMessage }}
+                </v-alert>
+                <v-form @submit.prevent="editPostSubmit">
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="editCopy.title" label="Title" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="editCopy.author" label="Author" hide-details disabled></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="editCopy.date" label="Date" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field v-model="editCopy.content" label="Content" hide-details></v-text-field>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="editPostCancel" depressed>
+                            Cancel
+                        </v-btn>
+                        <v-btn type="submit" v-bind:loading="editPending" color="primary" depressed>
+                            {{ isEditCreating ? "Create" : "Save" }}
+                        </v-btn>
+                    </v-card-actions>
+                </v-form>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -80,12 +126,6 @@ export default class BlogPosts extends Vue {
     errorMessage: string | null = null;
     headers = [
         {
-            text: "ID",
-            align: "start",
-            sortable: false,
-            value: "id"
-        },
-        {
             text: "Title",
             align: "start",
             sortable: true,
@@ -96,6 +136,12 @@ export default class BlogPosts extends Vue {
             align: "start",
             sortable: true,
             value: "date"
+        },
+        {
+            text: "ID",
+            align: "start",
+            sortable: false,
+            value: "id"
         },
         {
             text: "Author",
@@ -119,24 +165,54 @@ export default class BlogPosts extends Vue {
     deletePending: boolean = false;
     deleteErrorMessage: string | null = null;
 
+    // Create / edit dialog
+    showEditDialog: boolean = false;
+    editCopy: BlogPostModel = new BlogPostModel(); // A copy of the post to edit, or a blank one to create a post
+    editPending: boolean = false;
+    editErrorMessage: string | null = null;
+    isEditCreating: boolean = false;
+
     mounted() {
         this.refreshData();
     }
 
     refreshData() {
+        this.isLoading = true;
         UPClient.listPosts((posts: BlogPostModel[]) => {
             this.posts = posts;
+            this.errorMessage = null;
+            this.isLoading = false;
         }, (message: string) => {
             this.errorMessage = message;
+            this.isLoading = false;
         });
     }
 
     createPostClicked() {
-        // TODO: Implement
+        this.editCopy = new BlogPostModel();
+        if (State.state.user != null) {
+            this.editCopy.author = State.state.user.displayName;
+        }
+        this.editErrorMessage = null;
+        this.isEditCreating = true;
+        this.showEditDialog = true;
     }
 
     editPostClicked(post: BlogPostModel) {
-        // TODO: Implement
+        this.isLoading = true;
+        UPClient.getPost(post.id, (fullPost: BlogPostModel) => {
+            this.isLoading = false;
+            this.errorMessage = null;
+
+            this.editCopy = Object.assign({}, fullPost);
+            this.editErrorMessage = null;
+            this.isEditCreating = false;
+            this.showEditDialog = true;
+        }, (message: string) => {
+            this.errorMessage = message;
+            this.isLoading = false;
+        })
+
     }
 
     deletePostClicked(post: BlogPostModel) {
@@ -160,6 +236,27 @@ export default class BlogPosts extends Vue {
                 this.deletePending = false;
             });
         }
+    }
+
+    editPostSubmit() {
+        this.editPending = true;
+        let call = this.isEditCreating ? UPClient.createPost : UPClient.updatePost;
+
+        call(this.editCopy, () => {
+            this.editErrorMessage = null;
+            this.editPending = false;
+            this.showEditDialog = false;
+
+            this.refreshData();
+        }, (message: string) => {
+            this.editErrorMessage = message;
+            this.editPending = false;
+        });
+
+    }
+
+    editPostCancel() {
+        this.showEditDialog = false;
     }
 }
 </script>

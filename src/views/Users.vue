@@ -140,7 +140,7 @@ export default class Users extends Vue {
         },
         {
             text: "Edit",
-            align: "center",
+            align: "end",
             sortable: false,
             value: "edit"
         }
