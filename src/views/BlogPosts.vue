@@ -82,7 +82,15 @@
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-text-field v-model="editCopy.date" label="Date" hide-details></v-text-field>
+                                    <!--
+                                        <v-text-field v-model="editCopy.date" label="Date" hide-details></v-text-field>
+                                    -->
+                                    <v-menu v-model="showDatePicker" v-bind:close-on-content-click="false" min-width="100px" offset-y>
+                                        <template v-slot:activator="{ on }">
+                                            <v-text-field v-model="editCopy.date" label="Publish Date" prepend-icon="mdi-calendar-clock" v-on="on" readonly hide-details></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="isoDate" @input="datePickerHide"></v-date-picker>
+                                    </v-menu>
                                 </v-col>
                             </v-row>
                             <v-row>
@@ -176,6 +184,8 @@ export default class BlogPosts extends Vue {
     editPending: boolean = false;
     editErrorMessage: string | null = null;
     isEditCreating: boolean = false;
+    showDatePicker: boolean = false;
+    isoDate: string = "";
 
     mounted() {
         this.refreshData();
@@ -201,6 +211,7 @@ export default class BlogPosts extends Vue {
         this.editErrorMessage = null;
         this.isEditCreating = true;
         this.showEditDialog = true;
+        this.isoDate = new Date().toISOString().substr(0, 10);
     }
 
     editPostClicked(post: BlogPostModel) {
@@ -213,11 +224,11 @@ export default class BlogPosts extends Vue {
             this.editErrorMessage = null;
             this.isEditCreating = false;
             this.showEditDialog = true;
+            this.isoDate = new Date(this.editCopy.date).toISOString().substr(0, 10)
         }, (message: string) => {
             this.errorMessage = message;
             this.isLoading = false;
-        })
-
+        });
     }
 
     deletePostClicked(post: BlogPostModel) {
@@ -262,6 +273,12 @@ export default class BlogPosts extends Vue {
 
     editPostCancel() {
         this.showEditDialog = false;
+    }
+
+    datePickerHide() {
+        let [ year, month, day ] = this.isoDate.split("-");
+        this.editCopy.date = parseInt(month) + "/" + parseInt(day) + "/" + year;
+        this.showDatePicker = false;
     }
 }
 </script>
