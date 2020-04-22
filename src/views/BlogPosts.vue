@@ -95,7 +95,113 @@
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-text-field v-model="editCopy.content" label="Content" hide-details></v-text-field>
+                                    <v-card outlined>
+                                        <editor-menu-bar v-bind:editor="editor" v-slot="{ commands, isActive }">
+                                            <v-row class="mx-1 mt-1">
+                                                <div>
+                                                    <v-btn @click.prevent="commands.undo" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-undo
+                                                        </v-icon>
+                                                    </v-btn>
+                                                    <v-btn @click.prevent="commands.redo" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-redo
+                                                        </v-icon>
+                                                    </v-btn>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <v-btn @click.prevent="commands.bold" v-bind:color="isActive.bold() ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-bold
+                                                        </v-icon>
+                                                    </v-btn>
+                                                    <v-btn @click.prevent="commands.italic" v-bind:color="isActive.italic() ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-italic
+                                                        </v-icon>
+                                                    </v-btn>
+                                                    <v-btn @click.prevent="commands.underline" v-bind:color="isActive.underline() ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-underline
+                                                        </v-icon>
+                                                    </v-btn>
+                                                    <v-btn @click.prevent="commands.strike" v-bind:color="isActive.strike() ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-strikethrough
+                                                        </v-icon>
+                                                    </v-btn>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <v-btn @click.prevent="commands.heading({ level: 1 })" v-bind:color="isActive.heading({ level: 1 }) ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-header-1
+                                                        </v-icon>
+                                                    </v-btn>
+                                                    <v-btn @click.prevent="commands.heading({ level: 2 })" v-bind:color="isActive.heading({ level: 2 }) ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-header-2
+                                                        </v-icon>
+                                                    </v-btn>
+                                                    <v-btn @click.prevent="commands.heading({ level: 3 })" v-bind:color="isActive.heading({ level: 3 }) ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-header-3
+                                                        </v-icon>
+                                                    </v-btn>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <v-btn @click.prevent="commands.bullet_list" v-bind:color="isActive.bullet_list() ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-list-bulleted
+                                                        </v-icon>
+                                                    </v-btn>
+                                                    <v-btn @click.prevent="commands.ordered_list" v-bind:color="isActive.ordered_list() ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-list-numbered
+                                                        </v-icon>
+                                                    </v-btn>
+                                                </div>
+                                                <!-- WIP
+                                                <div class="ml-3">
+                                                    <v-btn @click.prevent="" v-bind:color="<???> ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-link-plus
+                                                        </v-icon>
+                                                    </v-btn>
+                                                </div
+                                                -->
+                                                <div class="ml-3">
+                                                    <v-btn @click.prevent="commands.blockquote" v-bind:color="isActive.blockquote() ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-format-quote-open
+                                                        </v-icon>
+                                                    </v-btn>
+                                                    <v-btn @click.prevent="commands.code_block" v-bind:color="isActive.code_block() ? 'primary' : undefined" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-code-braces
+                                                        </v-icon>
+                                                    </v-btn>
+                                                </div>
+                                            </v-row>
+
+                                            <!--<div class="menubar">
+
+                                                <button
+                                                    class="menubar__button"
+                                                    :class="{ 'is-active': isActive.paragraph() }"
+                                                    @click="commands.paragraph"
+                                                    >
+                                                    <icon name="paragraph" />
+                                                </button>
+
+                                            </div>-->
+                                        </editor-menu-bar>
+                                        <v-card-text class="px-1 py-1" style="color: unset;">
+                                            <editor-content v-bind:editor="editor"></editor-content>
+
+                                        </v-card-text>
+                                    </v-card>
+
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -118,12 +224,17 @@
 <script lang="ts">
 import Component from "vue-class-component";
 import Vue from "vue";
+import { Editor, EditorContent, EditorMenuBar } from "tiptap";
+import { Blockquote, CodeBlock, Heading, ListItem, OrderedList, BulletList, Bold, Italic, Underline, Strike, Link, History } from "tiptap-extensions";
 import State from "@/state";
 import BlogPostModel from "@/models/BlogPostModel";
 import UPClient from "@/services/UPClient";
 
 @Component({
-
+    components: {
+        EditorContent,
+        EditorMenuBar
+    }
 })
 export default class BlogPosts extends Vue {
     get isReadOnly(): boolean {
@@ -186,9 +297,30 @@ export default class BlogPosts extends Vue {
     isEditCreating: boolean = false;
     showDatePicker: boolean = false;
     isoDate: string = "";
+    editor: any = null;
 
     mounted() {
         this.refreshData();
+        this.editor = new Editor({
+            extensions: [
+                new Blockquote(),
+                new CodeBlock(),
+                new Heading({ levels: [ 1, 2, 3 ] }),
+                new OrderedList(),
+                new BulletList(),
+                new ListItem(),
+                new Bold(),
+                new Italic(),
+                new Underline(),
+                new Strike(),
+                new Link(),
+                new History()
+            ]
+        });
+    }
+
+    beforeDestroy() {
+        this.editor.destroy();
     }
 
     refreshData() {
@@ -212,6 +344,8 @@ export default class BlogPosts extends Vue {
         this.isEditCreating = true;
         this.showEditDialog = true;
         this.isoDate = new Date().toISOString().substr(0, 10);
+        this.editor.options.content = this.editCopy.content;
+        this.editor.view.updateState(this.editor.createState()); // Reset editor history and state
     }
 
     editPostClicked(post: BlogPostModel) {
@@ -225,6 +359,8 @@ export default class BlogPosts extends Vue {
             this.isEditCreating = false;
             this.showEditDialog = true;
             this.isoDate = new Date(this.editCopy.date).toISOString().substr(0, 10)
+            this.editor.options.content = this.editCopy.content;
+            this.editor.view.updateState(this.editor.createState()); // Reset editor history and state
         }, (message: string) => {
             this.errorMessage = message;
             this.isLoading = false;
@@ -255,6 +391,7 @@ export default class BlogPosts extends Vue {
     }
 
     editPostSubmit() {
+        this.editCopy.content = this.editor.getHTML();
         this.editPending = true;
         let call = this.isEditCreating ? UPClient.createPost : UPClient.updatePost;
 
@@ -282,3 +419,29 @@ export default class BlogPosts extends Vue {
     }
 }
 </script>
+
+<style>
+.toolbar-button {
+    border-radius: 0px;
+    padding: 0 !important;
+    /*width: 1em;
+    height: 1em;*/
+    min-width: 0px !important;
+    width: 28px;
+    height: 28px !important;
+}
+
+.toolbar-button:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.toolbar-button:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.v-application code::before {
+    content: unset !important;
+}
+</style>
