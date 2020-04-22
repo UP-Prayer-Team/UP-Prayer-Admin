@@ -96,7 +96,7 @@
                             <v-row>
                                 <v-col>
                                     <v-card outlined>
-                                        <editor-menu-bar v-bind:editor="editor" v-slot="{ commands, isActive }">
+                                        <editor-menu-bar v-bind:editor="editor" v-slot="{ commands, isActive, getMarkAttrs }">
                                             <v-row class="mx-1 mt-1">
                                                 <div>
                                                     <v-btn @click.prevent="commands.undo" depressed class="toolbar-button">
@@ -161,15 +161,43 @@
                                                         </v-icon>
                                                     </v-btn>
                                                 </div>
-                                                <!-- WIP
                                                 <div class="ml-3">
-                                                    <v-btn @click.prevent="" v-bind:color="<???> ? 'primary' : undefined" depressed class="toolbar-button">
+                                                    <v-btn @click.prevent="showLinkEditor(isActive.link() ? getMarkAttrs('link').href : '')" v-bind:color="isActive.link() ? 'primary' : undefined" depressed class="toolbar-button">
                                                         <v-icon>
-                                                            mdi-link-plus
+                                                            {{ isActive.link() ? "mdi-link" : "mdi-link-plus" }}
                                                         </v-icon>
                                                     </v-btn>
-                                                </div
-                                                -->
+                                                    <v-btn v-if="isActive.link()" @click.prevent="commands.link({ href: null })" depressed class="toolbar-button">
+                                                        <v-icon>
+                                                            mdi-link-off
+                                                        </v-icon>
+                                                    </v-btn>
+                                                </div>
+
+                                                <v-dialog v-model="linkEditorVisible" max-width="400">
+                                                    <v-card>
+                                                        <v-card-title>
+                                                            {{ isActive.link() ? "Edit" : "Create" }} Link
+                                                        </v-card-title>
+
+                                                        <v-form @submit.prevent="confirmLink(commands, linkEditorURL)">
+                                                            <v-card-text>
+                                                                <v-text-field v-model="linkEditorURL" label="Destination URL" hide-details></v-text-field>
+                                                            </v-card-text>
+
+                                                            <v-card-actions>
+                                                                <v-spacer></v-spacer>
+                                                                <v-btn @click="linkEditorVisible = false" depressed>
+                                                                    Cancel
+                                                                </v-btn>
+                                                                <v-btn type="submit" color="primary" depressed>
+                                                                    {{ isActive.link() ? "Update" : "Create" }}
+                                                                </v-btn>
+                                                            </v-card-actions>
+                                                        </v-form>
+                                                    </v-card>
+                                                </v-dialog>
+
                                                 <div class="ml-3">
                                                     <v-btn @click.prevent="commands.blockquote" v-bind:color="isActive.blockquote() ? 'primary' : undefined" depressed class="toolbar-button">
                                                         <v-icon>
@@ -298,6 +326,8 @@ export default class BlogPosts extends Vue {
     showDatePicker: boolean = false;
     isoDate: string = "";
     editor: any = null;
+    linkEditorVisible: boolean = false;
+    linkEditorURL: string = "";
 
     mounted() {
         this.refreshData();
@@ -416,6 +446,16 @@ export default class BlogPosts extends Vue {
         let [ year, month, day ] = this.isoDate.split("-");
         this.editCopy.date = parseInt(month) + "/" + parseInt(day) + "/" + year;
         this.showDatePicker = false;
+    }
+
+    showLinkEditor(href: string) {
+        this.linkEditorURL = href;
+        this.linkEditorVisible = true;
+    }
+
+    confirmLink(commands: any, href: string) {
+        commands.link({ href });
+        this.linkEditorVisible = false;
     }
 }
 </script>
