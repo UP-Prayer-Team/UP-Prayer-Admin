@@ -484,4 +484,24 @@ export default class BlogPosts extends Vue {
 .v-application code::before {
     content: unset !important;
 }
+
+/* Blog Content Styles
+   (Please keep in sync with UP-Prayer-Front-End's Blog.vue) */
+/* Hack because something (Vuetify?) is killing all margins on heading elements for some reason. */
+h1, h2, h3, h4, h5, p, blockquote {
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+}
+blockquote {
+    margin-left: 5em;
+    margin-right: 5em;
+    padding: 0.25em 1em;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 7px;
+}
+pre > code {
+    margin: 1em;
+    padding: 0.10em 0.25em;
+    display: block;
+}
 </style>
