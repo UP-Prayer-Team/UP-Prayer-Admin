@@ -8,7 +8,7 @@
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
             <v-btn icon @click.stop="createEndorsementClicked" v-bind:disabled="isLoading || isReadOnly">
-                <v-icon>mdi-newspaper-plus</v-icon>
+                <v-icon>mdi-comment-plus-outline</v-icon>
             </v-btn>
             <v-spacer></v-spacer>
 
@@ -28,7 +28,7 @@
                 </v-btn>
             </template>
             <template v-slot:item.actions="{ item }">
-                <div style="display: flex;">
+                <div style="display: flex; justify-content: flex-end;">
                     <v-btn icon @click="editEndorsementClicked(item)" v-bind:disabled="isLoading || isReadOnly">
                         <v-icon>
                             mdi-pencil

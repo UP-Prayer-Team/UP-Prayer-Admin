@@ -5,6 +5,7 @@ import Login from "@/views/Login.vue";
 import Users from "@/views/Users.vue";
 import User from "@/views/User.vue";
 import Endorsements from "@/views/Endorsements.vue";
+import BlogPosts from "@/views/BlogPosts.vue";
 import Vuex from "vuex";
 import State from "@/state";
 
@@ -40,6 +41,12 @@ export const EndorsementsRoute: RouteConfig = {
     component: Endorsements
 }
 
+export const BlogPostsRoute: RouteConfig = {
+    path: "/posts",
+    name: "Blog Posts",
+    component: BlogPosts
+}
+
 export const AboutRoute: RouteConfig = {
     path: "/about",
     name: "About",
@@ -55,6 +62,7 @@ const routes: RouteConfig[] = [
     UserRoute,
     UsersRoute,
     EndorsementsRoute,
+    BlogPostsRoute,
     AboutRoute
 ];
 

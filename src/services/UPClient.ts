@@ -1,6 +1,7 @@
 import User from "@/models/UserModel";
 import State from "@/state";
 import EndorsementModel from "@/models/EndorsementModel";
+import BlogPostModel from "@/models/BlogPostModel";
 
 function submitRequest(method: string, endpoint: string, body: object | null, onSuccess: (data: any) => void, onFailure: (message: string) => void) {
     let headers: any = { "Content-Type": "application/json" };
@@ -66,6 +67,36 @@ export default class UPClient {
 
     static updateEndorsements(currentIndex: number, endorsements: EndorsementModel[], onSuccess: () => void, onFailure: (message: string) => void) {
         submitRequest("POST", "/api/endorsements/update", { currentIndex, endorsements }, (data: any) => {
+            onSuccess();
+        }, onFailure);
+    }
+
+    static createPost(post: BlogPostModel, onSuccess: () => void, onFailure: (message: string) => void) {
+        submitRequest("POST", "/api/posts/create", { title: post.title, date: post.date, content: post.content }, (data: any) => {
+            onSuccess();
+        }, onFailure);
+    }
+
+    static listPosts(onSuccess: (posts: BlogPostModel[]) => void, onFailure: (message: string) => void) {
+        submitRequest("GET", "/api/posts/list", null, (data: any) => {
+            onSuccess(data);
+        }, onFailure);
+    }
+
+    static getPost(id: string, onSuccess: (post: BlogPostModel) => void, onFailure: (message: string) => void) {
+        submitRequest("GET", "/api/posts/post/" + id, null, (data: any) => {
+            onSuccess(data);
+        }, onFailure);
+    }
+
+    static deletePost(id: string, onSuccess: () => void, onFailure: (message: string) => void) {
+        submitRequest("POST", "/api/posts/delete", { id }, (data: any) => {
+            onSuccess();
+        }, onFailure);
+    }
+
+    static updatePost(post: BlogPostModel, onSuccess: () => void, onFailure: (message: string) => void) {
+        submitRequest("POST", "/api/posts/update", { id: post.id, title: post.title, date: post.date, content: post.content }, (data: any) => {
             onSuccess();
         }, onFailure);
     }
