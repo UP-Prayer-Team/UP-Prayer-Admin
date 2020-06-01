@@ -9,14 +9,19 @@
                         <img src="/img/logo.svg" style="max-height: 2em;">
                     </v-card-title>
 
-                    <v-alert type="error" v-if="errorMessage" tile>
-                        {{ errorMessage }}
-                    </v-alert>
+                    <div style="padding: 16px !important;">
+                        <v-alert color="#f91600" type="error" v-if="errorMessage" tile>
+                            {{ errorMessage }}
+                        </v-alert>
+                    </div>
 
                     <v-form @submit.prevent="login">
                         <v-card-text>
                             <v-text-field :filled="true" label="Username" name="username" type="text" v-model="username" />
-                            <v-text-field :filled="true" label="Password" name="password" type="password" v-model="password" />
+                            <v-text-field :filled="true" label="Password" name="password" v-model="password" 
+                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="showPassword ? 'text' : 'password'" 
+                            @click:append="showPassword = !showPassword"/>
                         </v-card-text>
 
                         <v-card-actions style="padding-right: 16px;">
@@ -48,6 +53,7 @@ export default class Login extends Vue {
     username: string = "";
     password: string = "";
     loginLoading: boolean = false;
+    showPassword: boolean = false;
 
     login() {
         let errorHandler = (message: string) => {
