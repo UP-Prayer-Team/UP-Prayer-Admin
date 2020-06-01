@@ -1,9 +1,9 @@
 <template>
     <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
-            <v-col cols="12" sm="8" md="4">
-                <v-card elevation="10" class="p-10">
-                    <v-card-title>
+            <v-col cols="12" sm="8" md="6">
+                <v-card elevation="10" class="p-10" style="padding: 16px;">
+                    <v-card-title class="title-text">
                         UP Prayer Movement Administration
                         <v-spacer></v-spacer>
                         <img src="/img/logo.svg" style="max-height: 2em;">
@@ -15,14 +15,13 @@
 
                     <v-form @submit.prevent="login">
                         <v-card-text>
-
-                            <v-text-field label="Username" name="username" type="text" v-model="username" />
-                            <v-text-field label="Password" name="password" type="password" v-model="password" />
+                            <v-text-field :filled="true" label="Username" name="username" type="text" v-model="username" />
+                            <v-text-field :filled="true" label="Password" name="password" type="password" v-model="password" />
                         </v-card-text>
 
-                        <v-card-actions>
+                        <v-card-actions style="padding-right: 16px;">
                             <v-spacer />
-                            <v-btn color="primary" type="submit" v-bind:loading="loginLoading" v-bind:depressed="true" class="px-5">
+                            <v-btn color="#c70098" style="color: white !important;" type="submit" v-bind:loading="loginLoading" v-bind:depressed="true" class="px-5">
                                 Login
                             </v-btn>
                         </v-card-actions>
@@ -70,3 +69,12 @@ export default class Login extends Vue {
     }
 };
 </script>
+
+<style scoped>
+
+.title-text {
+    font-family: 'Montserrat', sans-serif !important;
+        font-weight: 400;
+    word-break: keep-all;
+}
+</style>
