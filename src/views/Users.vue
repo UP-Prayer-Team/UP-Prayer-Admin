@@ -21,7 +21,7 @@
 
         <v-data-table v-bind:headers="headers" v-bind:items="users" v-bind:search="filterText" v-bind:loading="isLoading">
             <template v-slot:item.roles="{ item }">
-                <v-chip v-for="role in item.roles" v-bind:key="role" small color="primary" class="mr-1">
+                <v-chip v-for="role in item.roles" v-bind:key="role" small color="#a300ff" class="mr-1" style="color: white;">
                     {{ role }}
                 </v-chip>
             </template>
@@ -36,47 +36,47 @@
 
         <v-dialog v-model="showCreateUser" persistent max-width="700px">
             <v-card elevation="0">
-                <v-card-title>
-                    Create New User
+                <v-card-title class="title-text">
+                    <div style="padding-left: 20px;"> Create New User </div>
                     <v-spacer></v-spacer>
                     <v-btn icon @click="createUserCancel">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </v-card-title>
-                <v-alert type="error" v-if="createUserErrorMessage" tile>
+                <v-alert color="#f91600" type="error" v-if="createUserErrorMessage" tile>
                     {{ createUserErrorMessage }}
                 </v-alert>
-                <v-form @submit.prevent="createUserSubmit">
-                    <v-card-text>
+                <v-form @submit.prevent="createUserSubmit" style="padding-left: 16px; padding-right: 16px; padding-bottom: 16px;">
+                    <v-card-text style="padding-top: 0px; padding-bottom: 0px;">
                         <v-container>
                             <v-row>
                                 <v-col>
-                                    <v-text-field v-model="createUserData.username" label="Username" autocomplete="new-password" hide-details></v-text-field>
+                                    <v-text-field :filled="true" v-model="createUserData.username" label="Username" autocomplete="new-password" hide-details dense></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-text-field v-model="createUserData.password" label="Password" type="password" autocomplete="new-password" hide-details></v-text-field>
+                                    <v-text-field :filled="true" v-model="createUserData.password" label="Password" type="password" autocomplete="new-password" hide-details dense></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <v-row style="padding-top: 16px;">
+                                <v-col>
+                                    <v-text-field :filled="true" v-model="createUserData.displayName" label="Dislay Name" autocomplete="new-password" hide-details dense></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row>
                                 <v-col>
-                                    <v-text-field v-model="createUserData.displayName" label="Dislay Name" autocomplete="new-password" hide-details></v-text-field>
+                                    <v-text-field :filled="true" v-model="createUserData.email" label="Email Address" autocomplete="email" hide-details dense></v-text-field>
                                 </v-col>
                             </v-row>
-                            <v-row>
+                            <v-row style="padding-top: 16px;">
                                 <v-col>
-                                    <v-text-field v-model="createUserData.email" label="Email Address" autocomplete="email" hide-details></v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <v-select v-model="createUserData.type" v-bind:items="userTypeOptions" label="Privileges"></v-select>
+                                    <v-select :filled="true" v-model="createUserData.type" v-bind:items="userTypeOptions" label="Privileges" dense></v-select>
                                 </v-col>
                             </v-row>
                         </v-container>
                     </v-card-text>
-                    <v-card-actions>
+                    <v-card-actions style="padding-right: 28px;">
                         <v-spacer></v-spacer>
                         <v-btn @click="createUserCancel" depressed>
                             Cancel
@@ -152,7 +152,7 @@ export default class Users extends Vue {
     showCreateUser: boolean = false;
     userTypeOptions = [
         "Spectator (Read-only)",
-        "Administrator (Complete power)"
+        "Administrator (Edit power)"
     ];
     userTypeRoles = [
         [ "spectator" ],
@@ -224,5 +224,13 @@ export default class Users extends Vue {
 }
 .v-text-field--rounded > .v-input__control > .v-input__slot {
     padding: 0px 12px;
+}
+
+.title-text {
+    font-family: 'Montserrat', sans-serif !important;
+        font-weight: 400;
+    word-break: keep-all;
+    padding-bottom: 0px !important;
+    padding-right: 16px !important;
 }
 </style>

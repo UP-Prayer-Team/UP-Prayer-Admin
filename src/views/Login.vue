@@ -10,7 +10,7 @@
                     </v-card-title>
 
                     <div style="padding: 16px !important;">
-                        <v-alert color="#f91600" type="error" v-if="errorMessage" tile>
+                        <v-alert color="#f91600" type="error" v-if="errorMessage" dense>
                             {{ errorMessage }}
                         </v-alert>
                     </div>

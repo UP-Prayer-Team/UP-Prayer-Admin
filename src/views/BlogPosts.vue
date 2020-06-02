@@ -44,7 +44,7 @@
                 <v-alert type="warning" tile>
                     This cannot be undone.
                 </v-alert>
-                <v-alert type="error" v-if="deleteErrorMessage" tile>
+                <v-alert color="#f91600" type="error" v-if="deleteErrorMessage" tile>
                     {{ deleteErrorMessage }}
                 </v-alert>
                 <v-card-actions>
@@ -504,4 +504,5 @@ pre > code {
     padding: 0.10em 0.25em;
     display: block;
 }
+
 </style>

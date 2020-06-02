@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-if="!hideMenu" color="primary" app dark permanent class="no-transition">
+        <v-navigation-drawer v-if="!hideMenu" app dark permanent class="no-transition">
             <v-list dense class="py-0">
                 <v-list-item two-line>
                     <v-list-item-avatar style="background: rgb(50, 50, 50);">
@@ -125,5 +125,9 @@ export default class App extends Vue {
 .v-navigation-drawer__content {
     display: flex;
     flex-direction: column;
+}
+
+.v-navigation-drawer {
+    background: linear-gradient(to bottom, #a300ff, #c70098, #f91600) !important;
 }
 </style>
